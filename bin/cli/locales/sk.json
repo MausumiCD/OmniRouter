@@ -287,6 +287,7 @@
     "retentionOpt": "Ponechať iba posledných N záloh",
     "passphrasePrompt": "Šifrovacie heslo:",
     "noPassphrase": "Pre šifrovanú zálohu sa vyžaduje heslo.",
+    "restoreDecryptFailed": "Zálohu {name} nebolo možné dešifrovať (nesprávna prístupová fráza alebo poškodený súbor); nič sa nezmenilo.",
     "cloudFailed": "Upozornenie: nahrávanie do cloudu zlyhalo. Lokálna záloha bola uložená.",
     "cloudUploaded": "Cloudová záloha bola nahraná: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Spravovať konfiguráciu odolnosti",
       "threshold": "Prah zlyhaní",
       "resetTimeout": "Časový limit resetovania v ms",
-      "baseCooldown": "Základná čakacia lehota v ms"
+      "baseCooldown": "Základná čakacia lehota v ms",
+      "p2cLatencyWeight": "Váha latencie p2c, 0 (vypnuté) až 20"
     }
   },
   "nodes": {

@@ -287,6 +287,7 @@
     "retentionOpt": "Alleen de laatste N back-ups bewaren",
     "passphrasePrompt": "Wachtwoordzin voor versleuteling:",
     "noPassphrase": "Een wachtwoordzin is vereist voor een versleutelde back-up.",
+    "restoreDecryptFailed": "Back-up {name} kon niet worden gedecodeerd (verkeerde wachtwoordzin of beschadigd bestand); er is niets veranderd.",
     "cloudFailed": "Waarschuwing: uploaden naar de cloud is mislukt. De lokale back-up is opgeslagen.",
     "cloudUploaded": "Cloudback-up geüpload: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Veerkrachtconfiguratie beheren",
       "threshold": "Drempelwaarde voor fouten",
       "resetTimeout": "Resettime-out in ms",
-      "baseCooldown": "Basiscooldown in ms"
+      "baseCooldown": "Basiscooldown in ms",
+      "p2cLatencyWeight": "p2c latentiegewicht, 0 (uit) tot 20"
     }
   },
   "nodes": {

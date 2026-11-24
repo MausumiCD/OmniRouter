@@ -287,6 +287,7 @@
     "retentionOpt": "Conserva solo gli ultimi N backup",
     "passphrasePrompt": "Passphrase di crittografia:",
     "noPassphrase": "La passphrase è obbligatoria per un backup crittografato.",
+    "restoreDecryptFailed": "Impossibile decrittografare il backup {name} (passphrase errata o file danneggiato); nulla è stato cambiato.",
     "cloudFailed": "Avviso: caricamento nel cloud non riuscito. Il backup locale è stato salvato.",
     "cloudUploaded": "Backup caricato nel cloud: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Gestisci la configurazione di resilienza",
       "threshold": "Soglia di errore",
       "resetTimeout": "Timeout di reimpostazione in ms",
-      "baseCooldown": "Cooldown di base in ms"
+      "baseCooldown": "Cooldown di base in ms",
+      "p2cLatencyWeight": "Peso latenza p2c, da 0 (disattivato) a 20"
     }
   },
   "nodes": {

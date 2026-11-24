@@ -287,6 +287,7 @@
     "retentionOpt": "Coinnigh ach na N cúltaca is déanaí",
     "passphrasePrompt": "Pasfhocal criptithe:",
     "noPassphrase": "Tá pasfhocal ag teastáil le haghaidh cúltaca criptithe.",
+    "restoreDecryptFailed": "Níorbh fhéidir cúltaca {name} a dhíchriptiú (pasfhrása mícheart nó comhad damáiste); níor athraíodh aon rud.",
     "cloudFailed": "Rabhadh: theip ar uaslódáil scamall. Cúltaca áitiúil shábháilte.",
     "cloudUploaded": "Cúltaca scamall uaslódáilte: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Bainistigh cumraíocht athléimneachta",
       "threshold": "Tairseach teipthe",
       "resetTimeout": "Athshocraigh am an tamaill i ms",
-      "baseCooldown": "Bun-am fuaraithe i ms"
+      "baseCooldown": "Bun-am fuaraithe i ms",
+      "p2cLatencyWeight": "meáchan latency p2c, 0 (as) go 20"
     }
   },
   "nodes": {

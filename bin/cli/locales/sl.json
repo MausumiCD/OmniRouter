@@ -287,6 +287,7 @@
     "retentionOpt": "Ohrani samo zadnjih N varnostnih kopij",
     "passphrasePrompt": "Geselna fraza za šifriranje:",
     "noPassphrase": "Za šifrirano varnostno kopijo je zahtevana geselna fraza.",
+    "restoreDecryptFailed": "Varnostne kopije {name} ni bilo mogoče dešifrirati (napačno geslo ali poškodovana datoteka); nič se ni spremenilo.",
     "cloudFailed": "Opozorilo: nalaganje v oblak ni uspelo. Lokalna varnostna kopija je bila shranjena.",
     "cloudUploaded": "Varnostna kopija je bila naložena v oblak: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Upravljaj konfiguracijo odpornosti",
       "threshold": "Prag napak",
       "resetTimeout": "Časovna omejitev ponastavitve v ms",
-      "baseCooldown": "Osnovni čas mirovanja v ms"
+      "baseCooldown": "Osnovni čas mirovanja v ms",
+      "p2cLatencyWeight": "utež zakasnitve p2c, 0 (izklopljeno) do 20"
     }
   },
   "nodes": {

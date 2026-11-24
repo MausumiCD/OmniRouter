@@ -287,6 +287,7 @@
     "retentionOpt": "Säilytä vain viimeisimmät N varmuuskopiota",
     "passphrasePrompt": "Salauslause:",
     "noPassphrase": "Salauslause vaaditaan salattua varmuuskopiota varten.",
+    "restoreDecryptFailed": "Varmuuskopion {name} salausta ei voitu purkaa (väärä tunnuslause tai vahingoittunut tiedosto); mikään ei muuttunut.",
     "cloudFailed": "Varoitus: lataus pilveen epäonnistui. Paikallinen varmuuskopio tallennettiin.",
     "cloudUploaded": "Varmuuskopio ladattu pilveen: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Hallitse vikasietoisuusmäärityksiä",
       "threshold": "Vikakynnys",
       "resetTimeout": "Nollauksen aikakatkaisu millisekunteina",
-      "baseCooldown": "Perusjäähdytysaika millisekunteina"
+      "baseCooldown": "Perusjäähdytysaika millisekunteina",
+      "p2cLatencyWeight": "p2c-viivepaino, 0 (pois) - 20"
     }
   },
   "nodes": {

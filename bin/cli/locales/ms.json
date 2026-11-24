@@ -287,6 +287,7 @@
     "retentionOpt": "Kekalkan hanya N sandaran terakhir",
     "passphrasePrompt": "Frasa laluan penyulitan:",
     "noPassphrase": "Frasa laluan diperlukan untuk sandaran yang disulitkan.",
+    "restoreDecryptFailed": "{name} sandaran tidak dapat dinyahsulit (frasa laluan yang salah atau fail rosak); tiada apa yang diubah.",
     "cloudFailed": "Amaran: muat naik ke awan gagal. Sandaran setempat telah disimpan.",
     "cloudUploaded": "Sandaran awan dimuat naik: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Urus konfigurasi daya tahan",
       "threshold": "Ambang kegagalan",
       "resetTimeout": "Tamat masa penetapan semula dalam ms",
-      "baseCooldown": "Tempoh bertenang asas dalam ms"
+      "baseCooldown": "Tempoh bertenang asas dalam ms",
+      "p2cLatencyWeight": "berat kependaman p2c, 0 (mati) hingga 20"
     }
   },
   "nodes": {

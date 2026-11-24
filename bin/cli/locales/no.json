@@ -287,6 +287,7 @@
     "retentionOpt": "Behold bare de siste N sikkerhetskopiene",
     "passphrasePrompt": "Passordfrase for kryptering:",
     "noPassphrase": "Passordfrase er påkrevd for krypterte sikkerhetskopier.",
+    "restoreDecryptFailed": "Backup {name} kunne ikke dekrypteres (feil passordfrase eller skadet fil); ingenting ble endret.",
     "cloudFailed": "Advarsel: Opplasting til skyen mislyktes. Den lokale sikkerhetskopien ble lagret.",
     "cloudUploaded": "Sikkerhetskopi lastet opp til skyen: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Administrer robusthetskonfigurasjon",
       "threshold": "Feilgrense",
       "resetTimeout": "Tidsavbrudd for tilbakestilling i ms",
-      "baseCooldown": "Grunnleggende nedkjølingsperiode i ms"
+      "baseCooldown": "Grunnleggende nedkjølingsperiode i ms",
+      "p2cLatencyWeight": "p2c latensvekt, 0 (av) til 20"
     }
   },
   "nodes": {

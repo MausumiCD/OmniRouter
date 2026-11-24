@@ -287,6 +287,7 @@
     "retentionOpt": "Manter apenas as últimas N cópias de segurança",
     "passphrasePrompt": "Frase secreta de encriptação:",
     "noPassphrase": "É necessária uma frase secreta para uma cópia de segurança encriptada.",
+    "restoreDecryptFailed": "O backup {name} não pôde ser desencriptado (password incorreta ou ficheiro danificado); nada foi alterado.",
     "cloudFailed": "Aviso: o carregamento para a nuvem falhou. A cópia de segurança local foi guardada.",
     "cloudUploaded": "Cópia de segurança carregada para a nuvem: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Gerir configuração de resiliência",
       "threshold": "Limite de falhas",
       "resetTimeout": "Tempo limite de reposição em ms",
-      "baseCooldown": "Período de espera base em ms"
+      "baseCooldown": "Período de espera base em ms",
+      "p2cLatencyWeight": "peso de latência p2c, 0 (desligado) a 20"
     }
   },
   "nodes": {

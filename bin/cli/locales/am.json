@@ -287,6 +287,7 @@
     "retentionOpt": "የመጨረሻዎቹን N ምትኬዎች ብቻ አቆይ",
     "passphrasePrompt": "የማመስጠሪያ የይለፍ ሐረግ፦",
     "noPassphrase": "ለተመሰጠረ ምትኬ የይለፍ ሐረግ ያስፈልጋል።",
+    "restoreDecryptFailed": "ምትኬ {name} ሊፈታ አልቻለም (የተሳሳተ የይለፍ ሐረግ ወይም የተበላሸ ፋይል)። ምንም አልተለወጠም።",
     "cloudFailed": "ማስጠንቀቂያ፦ ወደ ደመና መስቀሉ አልተሳካም። አካባቢያዊው ምትኬ ተቀምጧል።",
     "cloudUploaded": "የደመና ምትኬው ተሰቅሏል፦ {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "የመቋቋም ውቅረትን ያስተዳድሩ",
       "threshold": "የውድቀት ገደብ",
       "resetTimeout": "የዳግም ማስጀመሪያ ጊዜ ገደብ በms",
-      "baseCooldown": "መሠረታዊ የማቀዝቀዣ ጊዜ በms"
+      "baseCooldown": "መሠረታዊ የማቀዝቀዣ ጊዜ በms",
+      "p2cLatencyWeight": "p2c የመዘግየት ክብደት፣ 0 (ጠፍቷል) እስከ 20"
     }
   },
   "nodes": {

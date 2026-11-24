@@ -287,6 +287,7 @@
     "retentionOpt": "Behold kun de seneste N sikkerhedskopier",
     "passphrasePrompt": "Krypteringsadgangskode:",
     "noPassphrase": "Der kræves en adgangskode til en krypteret sikkerhedskopi.",
+    "restoreDecryptFailed": "Backup {name} kunne ikke dekrypteres (forkert adgangssætning eller beskadiget fil); intet blev ændret.",
     "cloudFailed": "Advarsel: Upload til cloudlager mislykkedes. Den lokale sikkerhedskopi blev gemt.",
     "cloudUploaded": "Sikkerhedskopi uploadet til cloudlager: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Administrer robusthedskonfiguration",
       "threshold": "Fejltærskel",
       "resetTimeout": "Timeout for nulstilling i ms",
-      "baseCooldown": "Grundlæggende nedkølingsperiode i ms"
+      "baseCooldown": "Grundlæggende nedkølingsperiode i ms",
+      "p2cLatencyWeight": "p2c latensvægt, 0 (fra) til 20"
     }
   },
   "nodes": {

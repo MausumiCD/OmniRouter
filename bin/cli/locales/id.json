@@ -287,6 +287,7 @@
     "retentionOpt": "Simpan hanya N cadangan terakhir",
     "passphrasePrompt": "Frasa sandi enkripsi:",
     "noPassphrase": "Frasa sandi diperlukan untuk cadangan terenkripsi.",
+    "restoreDecryptFailed": "{name} cadangan tidak dapat didekripsi (frasa sandi salah atau file rusak); tidak ada yang berubah.",
     "cloudFailed": "Peringatan: pengunggahan ke cloud gagal. Cadangan lokal telah disimpan.",
     "cloudUploaded": "Cadangan cloud telah diunggah: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Kelola konfigurasi ketahanan",
       "threshold": "Ambang batas kegagalan",
       "resetTimeout": "Batas waktu pengaturan ulang dalam ms",
-      "baseCooldown": "Cooldown dasar dalam ms"
+      "baseCooldown": "Cooldown dasar dalam ms",
+      "p2cLatencyWeight": "berat latensi p2c, 0 (mati) hingga 20"
     }
   },
   "nodes": {

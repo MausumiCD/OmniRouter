@@ -287,6 +287,7 @@
     "retentionOpt": "Zachowaj tylko ostatnie N kopii zapasowych",
     "passphrasePrompt": "Hasło szyfrowania:",
     "noPassphrase": "Hasło jest wymagane w przypadku zaszyfrowanej kopii zapasowej.",
+    "restoreDecryptFailed": "Nie można odszyfrować kopii zapasowej {name} (złe hasło lub uszkodzony plik); nic nie zostało zmienione.",
     "cloudFailed": "Ostrzeżenie: przesyłanie do chmury nie powiodło się. Lokalna kopia zapasowa została zapisana.",
     "cloudUploaded": "Kopia zapasowa przesłana do chmury: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Zarządzaj konfiguracją odporności",
       "threshold": "Próg błędów",
       "resetTimeout": "Limit czasu resetowania w ms",
-      "baseCooldown": "Bazowy czas odczekania w ms"
+      "baseCooldown": "Bazowy czas odczekania w ms",
+      "p2cLatencyWeight": "waga opóźnienia p2c, 0 (wyłączone) do 20"
     }
   },
   "nodes": {

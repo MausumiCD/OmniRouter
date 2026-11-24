@@ -287,6 +287,7 @@
     "retentionOpt": "Panatilihin lamang ang huling N backup",
     "passphrasePrompt": "Encryption passphrase:",
     "noPassphrase": "Kailangan ang passphrase para sa naka-encrypt na backup.",
+    "restoreDecryptFailed": "Hindi ma-decrypt ang backup na {name} (maling passphrase o nasira na file); walang pinagbago.",
     "cloudFailed": "Babala: nabigo ang pag-upload sa cloud. Na-save ang lokal na backup.",
     "cloudUploaded": "Na-upload ang cloud backup: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Pamahalaan ang resilience config",
       "threshold": "Hangganan ng pagkabigo",
       "resetTimeout": "Timeout sa pag-reset sa ms",
-      "baseCooldown": "Batayang cooldown sa ms"
+      "baseCooldown": "Batayang cooldown sa ms",
+      "p2cLatencyWeight": "p2c latency weight, 0 (off) hanggang 20"
     }
   },
   "nodes": {

@@ -287,6 +287,7 @@
     "retentionOpt": "Zadrži samo posljednjih N rezervnih kopija",
     "passphrasePrompt": "Lozinka za enkripciju:",
     "noPassphrase": "Lozinka je obavezna za enkriptovanu sigurnosnu kopiju.",
+    "restoreDecryptFailed": "Backup {name} nije mogao biti dešifrovan (pogrešna lozinka ili oštećena datoteka); ništa nije promijenjeno.",
     "cloudFailed": "Upozorenje: upload na cloud je nije uspio. Lokalna rezervna kopija je sačuvana.",
     "cloudUploaded": "Cloud backup otpremljen: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Upravljaj konfiguracijom otpornosti",
       "threshold": "Prag neuspjeha",
       "resetTimeout": "Reset timeout u ms",
-      "baseCooldown": "Osnovno vrijeme hlađenja u ms"
+      "baseCooldown": "Osnovno vrijeme hlađenja u ms",
+      "p2cLatencyWeight": "p2c težina kašnjenja, 0 (isključeno) do 20"
     }
   },
   "nodes": {

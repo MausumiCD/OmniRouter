@@ -287,6 +287,7 @@
     "retentionOpt": "Chỉ giữ lại N bản sao lưu gần nhất",
     "passphrasePrompt": "Mật khẩu mã hóa:",
     "noPassphrase": "Cần có mật khẩu cho bản sao lưu được mã hóa.",
+    "restoreDecryptFailed": "Không thể giải mã {name} sao lưu (cụm mật khẩu sai hoặc tệp bị hỏng); không có gì thay đổi.",
     "cloudFailed": "Cảnh báo: tải lên đám mây không thành công. Bản sao lưu cục bộ đã được lưu.",
     "cloudUploaded": "Đã tải bản sao lưu lên đám mây: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Quản lý cấu hình phục hồi",
       "threshold": "Ngưỡng lỗi",
       "resetTimeout": "Thời gian chờ đặt lại tính bằng ms",
-      "baseCooldown": "Thời gian chờ cơ sở tính bằng ms"
+      "baseCooldown": "Thời gian chờ cơ sở tính bằng ms",
+      "p2cLatencyWeight": "trọng số độ trễ p2c, 0 (tắt) đến 20"
     }
   },
   "nodes": {

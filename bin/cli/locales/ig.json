@@ -287,6 +287,7 @@
     "retentionOpt": "Debe naanị ndabere N ikpeazụ",
     "passphrasePrompt": "Okwuntughe izochi data:",
     "noPassphrase": "A chọrọ okwuntughe maka ndabere ezoro ezo.",
+    "restoreDecryptFailed": "Enweghị ike ibelata {name} ndabere (passphrase na-ezighi ezi ma ọ bụ faịlụ mebiri emebi); ọ dịghị ihe gbanwere.",
     "cloudFailed": "Ịdọ aka ná ntị: nbulite na igwe ojii dara. Echekwara ndabere mpaghara.",
     "cloudUploaded": "Ebulitela ndabere igwe ojii: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Jikwaa nhazi nkwụsi ike",
       "threshold": "Oke ọdịda",
       "resetTimeout": "Oge nchere tupu nrụgharị na ms",
-      "baseCooldown": "Oge izu ike ndabere na ms"
+      "baseCooldown": "Oge izu ike ndabere na ms",
+      "p2cLatencyWeight": "Ibu p2c dị arọ, 0 (gbanyụọ) ruo 20"
     }
   },
   "nodes": {

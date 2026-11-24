@@ -287,6 +287,7 @@
     "retentionOpt": "Palikti tik paskutines N atsarginių kopijų",
     "passphrasePrompt": "Šifravimo slaptafrazė:",
     "noPassphrase": "Šifruotai atsarginei kopijai būtina slaptafrazė.",
+    "restoreDecryptFailed": "Nepavyko iššifruoti atsarginės kopijos {name} (neteisinga slaptafrazė arba sugadintas failas); niekas nepasikeitė.",
     "cloudFailed": "Įspėjimas: nepavyko įkelti į debesiją. Vietinė atsarginė kopija išsaugota.",
     "cloudUploaded": "Atsarginė kopija įkelta į debesiją: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Tvarkyti atsparumo konfigūraciją",
       "threshold": "Gedimų slenkstis",
       "resetTimeout": "Nustatymo iš naujo skirtasis laikas, ms",
-      "baseCooldown": "Bazinis atvėsimo laikotarpis, ms"
+      "baseCooldown": "Bazinis atvėsimo laikotarpis, ms",
+      "p2cLatencyWeight": "p2c delsos svoris, nuo 0 (išjungta) iki 20"
     }
   },
   "nodes": {

@@ -287,6 +287,7 @@
     "retentionOpt": "Csak az utolsó N biztonsági mentés megőrzése",
     "passphrasePrompt": "Titkosítási jelmondat:",
     "noPassphrase": "Titkosított biztonsági mentéshez jelmondat szükséges.",
+    "restoreDecryptFailed": "{name} biztonsági másolatot nem sikerült visszafejteni (rossz jelszó vagy sérült fájl); semmi sem változott.",
     "cloudFailed": "Figyelmeztetés: a felhőbe való feltöltés sikertelen. A helyi biztonsági mentés mentve lett.",
     "cloudUploaded": "A felhőalapú biztonsági mentés feltöltve: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Ellenálló képességi konfiguráció kezelése",
       "threshold": "Hibaküszöb",
       "resetTimeout": "Visszaállítási időtúllépés ezredmásodpercben",
-      "baseCooldown": "Alap várakozási idő ezredmásodpercben"
+      "baseCooldown": "Alap várakozási idő ezredmásodpercben",
+      "p2cLatencyWeight": "p2c késleltetési súly, 0 (ki) és 20 között"
     }
   },
   "nodes": {

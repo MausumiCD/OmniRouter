@@ -287,6 +287,7 @@
     "retentionOpt": "Żomm biss l-aħħar N reżervi",
     "passphrasePrompt": "Passphrase tal-enkripta:",
     "noPassphrase": "Passphrase meħtieġ għal reżerv enkriptat.",
+    "restoreDecryptFailed": "Backup {name} ma setax jiġi decrypted (passphrase ħażina jew fajl bil-ħsara); ma nbidel xejn.",
     "cloudFailed": "Twissija: ittella' tal-cloud falla. Reżerv lokali ġie salvagardjat.",
     "cloudUploaded": "Reżerv cloud ittella': {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Immaniġġja l-konfigurazzjoni tar-reżiljenza",
       "threshold": "Limitu ta' falliment",
       "resetTimeout": "Timeout ta' reset f'ms",
-      "baseCooldown": "Cooldown bażiku f'ms"
+      "baseCooldown": "Cooldown bażiku f'ms",
+      "p2cLatencyWeight": "Piż tal-latency p2c, 0 (mitfi) sa 20"
     }
   },
   "nodes": {

@@ -287,6 +287,7 @@
     "retentionOpt": "Zadrži samo posljednjih N sigurnosnih kopija",
     "passphrasePrompt": "Zaporka za šifriranje:",
     "noPassphrase": "Zaporka je obavezna za šifriranu sigurnosnu kopiju.",
+    "restoreDecryptFailed": "Sigurnosna kopija {name} nije se mogla dešifrirati (pogrešna šifra ili oštećena datoteka); ništa se nije promijenilo.",
     "cloudFailed": "Upozorenje: učitavanje u oblak nije uspjelo. Lokalna sigurnosna kopija je spremljena.",
     "cloudUploaded": "Sigurnosna kopija u oblaku učitana: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Upravljanje konfiguracijom otpornosti",
       "threshold": "Prag neuspjeha",
       "resetTimeout": "Vrijeme resetiranja u ms",
-      "baseCooldown": "Osnovno vrijeme hlađenja u ms"
+      "baseCooldown": "Osnovno vrijeme hlađenja u ms",
+      "p2cLatencyWeight": "p2c težina kašnjenja, 0 (isključeno) do 20"
     }
   },
   "nodes": {

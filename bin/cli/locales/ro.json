@@ -287,6 +287,7 @@
     "retentionOpt": "Păstrează doar ultimele N copii de rezervă",
     "passphrasePrompt": "Fraza de acces pentru criptare:",
     "noPassphrase": "Fraza de acces este obligatorie pentru copia de rezervă criptată.",
+    "restoreDecryptFailed": "Backup {name} nu a putut fi decriptat (frază de acces greșită sau fișier deteriorat); nimic nu s-a schimbat.",
     "cloudFailed": "Avertisment: încărcarea în cloud a eșuat. Copia de rezervă locală a fost salvată.",
     "cloudUploaded": "Copia de rezervă a fost încărcată în cloud: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Gestionează configurația de reziliență",
       "threshold": "Pragul de eșecuri",
       "resetTimeout": "Timp de resetare în ms",
-      "baseCooldown": "Perioada de așteptare de bază în ms"
+      "baseCooldown": "Perioada de așteptare de bază în ms",
+      "p2cLatencyWeight": "Greutatea latenței p2c, de la 0 (dezactivat) la 20"
     }
   },
   "nodes": {

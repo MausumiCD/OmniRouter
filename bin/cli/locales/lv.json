@@ -287,6 +287,7 @@
     "retentionOpt": "Saglabāt tikai pēdējos N dublējumus",
     "passphrasePrompt": "Šifrēšanas parole:",
     "noPassphrase": "Parole ir nepieciešama šifrētam dublējumam.",
+    "restoreDecryptFailed": "{name} dublējumu nevarēja atšifrēt (nepareiza ieejas frāze vai bojāts fails); nekas netika mainīts.",
     "cloudFailed": "Brīdinājums: mākoņa augšupielāde neizdevās. Lokālais dublējums tika saglabāts.",
     "cloudUploaded": "Mākoņa dublējums augšupielādēts: {url}",
     "auto": {
@@ -973,7 +974,8 @@
       "description": "Pārvaldīt izturības konfigurāciju",
       "threshold": "Kļūdas slieksnis",
       "resetTimeout": "Atiestatīšanas taimauts milisekundēs",
-      "baseCooldown": "Bāzes atdzišanas laiks milisekundēs"
+      "baseCooldown": "Bāzes atdzišanas laiks milisekundēs",
+      "p2cLatencyWeight": "p2c latentuma svars, no 0 (izslēgts) līdz 20"
     }
   },
   "nodes": {
