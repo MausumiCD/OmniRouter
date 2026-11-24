@@ -91,6 +91,7 @@ import {
 } from "@/lib/providerNodePrefixes";
 import {
   applyCatalogPostFilters,
+  dropEffortTierRows,
   finalizeCatalogResponse,
   syntheticVariantListingIds,
 } from "./catalogResponse";
@@ -287,6 +288,7 @@ export async function getUnifiedModelsResponse(
           settingsForAuth?.hideAutoCombos === true || settingsForAuth?.autoRoutingEnabled === false,
         hideNoThinkVariants: settingsForAuth?.hideNoThinkVariants === true,
         exposeCombosOnly: buildFlags.combosOnly,
+        leanCatalog: settingsForAuth?.leanCatalog === true,
         scheduleBackgroundRefresh: options.scheduleBackgroundRefresh,
         revealHidden: buildFlags.revealHidden,
       }
@@ -385,10 +387,27 @@ async function buildUnifiedModelsResponseCore(
     const capabilityResolutionSnapshot = createModelCapabilityResolutionSnapshot();
     const { aliasToProviderId, providerIdToAlias } = buildAliasMaps();
     const _qp = new URL(request.url).searchParams.get("prefix");
+    // Lean catalog: real provider ids only, so the dual alias+canonical rows collapse
+    // to canonical. An explicit ?prefix= still wins.
+    const leanCatalog = settings.leanCatalog === true;
     const prefixMode =
-      _qp === "alias" || _qp === "canonical" || _qp === "dual" ? _qp : getModelsCatalogPrefixMode();
+      _qp === "alias" || _qp === "canonical" || _qp === "dual"
+        ? _qp
+        : leanCatalog
+          ? "canonical"
+          : getModelsCatalogPrefixMode();
     const includeAlias = prefixMode !== "canonical";
     const includeCanonical = prefixMode !== "alias";
+    // No-auth providers never get a canonical row (see the canonical branches below), so in
+    // lean mode their alias row is the only routable listing and must stay. Scoped to
+    // leanCatalog: an explicit ?prefix=canonical / MODELS_CATALOG_PREFIX_MODE=canonical keeps its
+    // pre-lean behavior (#11632) and must not gain extra alias rows.
+    const noAuthAliasOnly = (
+      canonicalProviderId: string,
+      alias: string,
+      providerId?: string
+    ): boolean =>
+      leanCatalog && !includeAlias && isNoAuthProviderKey(canonicalProviderId, providerId, alias);
     const modelsDevEffortTiers = isModelsDevEffortTiersEnabled(); // #15944, default off
     const resolveCanonicalProviderId = (aliasOrProviderId: string, fallbackProviderId?: string) =>
       resolveCanonicalProviderIdFromMaps(aliasToProviderId, aliasOrProviderId, fallbackProviderId);
@@ -409,7 +428,8 @@ async function buildUnifiedModelsResponseCore(
     // hideAutoCombos — which only unadvertises ids that still route when sent
     // explicitly — a disabled router rejects every auto/* id with a 400, so
     // listing them offers the client a choice that cannot succeed.
-    const hideAuto = settings.hideAutoCombos === true || settings.autoRoutingEnabled === false;
+    const hideAuto =
+      settings.hideAutoCombos === true || settings.autoRoutingEnabled === false || leanCatalog;
     const shouldHidePaid = (
       providerKey: string,
       modelId: string,
@@ -958,7 +978,8 @@ async function buildUnifiedModelsResponseCore(
       prefixMode,
       aliasToProviderId,
       isSyntheticVariantHidden,
-      hideNoThinkVariants: settings.hideNoThinkVariants === true,
+      hideNoThinkVariants: settings.hideNoThinkVariants === true || leanCatalog,
+      disableEffortVariants: leanCatalog,
       allowCcDiscoveryAliases: earlyKeyMeta?.allowCcDiscoveryAliases !== false,
       blockedProviders: settings.blockedProviders,
       // Per-entry `pricing`: a combo is priced as its first visible target.
@@ -993,7 +1014,11 @@ async function buildUnifiedModelsResponseCore(
         timestamp,
         (c) => buildComboCatalogMetadata(c, getVisibleComboTargets(c))
       );
-      const quotaFinal = await applyCatalogPostFilters(request, quotaModels, postFilterContext);
+      const quotaFinal = await applyCatalogPostFilters(
+        request,
+        dropEffortTierRows(quotaModels, leanCatalog),
+        postFilterContext
+      );
       return finalizeCatalogResponse(request, quotaFinal, () => undefined, {
         ...corsHeaders,
         ...diagnosticHeaders,
@@ -1270,7 +1295,7 @@ async function buildUnifiedModelsResponseCore(
         // so dual mode cannot double up. Same class as #11832 (custom nodes,
         // PR #11918), which only widened the synced/custom/alias-backed loops.
         const selfAliased = canonicalProviderId === alias;
-        if (includeAlias || selfAliased) {
+        if (includeAlias || selfAliased || noAuthAliasOnly(canonicalProviderId, alias)) {
           models.push({
             id: aliasId,
             object: "model",
@@ -1503,7 +1528,12 @@ async function buildUnifiedModelsResponseCore(
             PROVIDER_MODELS[canonicalProviderId],
           ]);
           const syncedNameField = syncedName ? { name: syncedName } : {};
-          if (includeAlias || Boolean(prefix) || selfAliased) {
+          if (
+            includeAlias ||
+            Boolean(prefix) ||
+            selfAliased ||
+            noAuthAliasOnly(canonicalProviderId, alias, providerId)
+          ) {
             models.push({
               id: aliasId,
               object: "model",
@@ -1984,7 +2014,13 @@ async function buildUnifiedModelsResponseCore(
           // Preserve catalog identity and discovered metadata, but let every field
           // explicitly stored on the custom row determine the effective metadata.
           const aliasId = `${alias}/${bareModelId}`;
-          const existingIndex = models.findIndex((m) => m.id === aliasId);
+          // In canonical mode (incl. lean) the alias row may be suppressed, so the surviving
+          // row is the canonical one; look it up too so the overlay is not skipped.
+          const canonicalRowId = `${canonicalProviderId}/${bareModelId}`;
+          let existingIndex = models.findIndex((m) => m.id === aliasId);
+          if (existingIndex === -1 && !includeAlias && canonicalRowId !== aliasId) {
+            existingIndex = models.findIndex((m) => m.id === canonicalRowId);
+          }
           if (existingIndex !== -1) {
             const existing = models[existingIndex] as Record<string, unknown> & { id: string };
             const { endpoints, apiFormat } = customOverlayEndpointFields(model, existing);
@@ -2002,7 +2038,7 @@ async function buildUnifiedModelsResponseCore(
                     }
                 : null;
             models[existingIndex] = mergeCustomModelMetadata(existing, {
-              id: aliasId,
+              id: existing.id,
               ...(typeof model.name === "string" ? { name: model.name } : {}),
               ...(apiFormat ? { api_format: apiFormat } : {}),
               ...overlayEndpoints(endpoints),
@@ -2033,7 +2069,12 @@ async function buildUnifiedModelsResponseCore(
             ? getCustomVisionCapabilityFields(model, aliasId, bareModelId)
             : null;
 
-          if (includeAlias || Boolean(prefix) || selfAliased) {
+          if (
+            includeAlias ||
+            Boolean(prefix) ||
+            selfAliased ||
+            noAuthAliasOnly(canonicalProviderId, alias, providerId)
+          ) {
             models.push({
               id: aliasId,
               object: "model",
@@ -2310,7 +2351,11 @@ async function buildUnifiedModelsResponseCore(
       }
     }
     // ?configuredOnly — hide models that have no eligible DB connection.
-    finalModels = await applyCatalogPostFilters(request, finalModels, postFilterContext);
+    finalModels = await applyCatalogPostFilters(
+      request,
+      dropEffortTierRows(finalModels, leanCatalog),
+      postFilterContext
+    );
 
     const getDefaultContextFallback = (model: any): number | undefined => {
       if (typeof model.context_length === "number") return undefined;
