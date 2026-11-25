@@ -16,7 +16,11 @@ import {
 } from "./utils";
 import Card from "@/shared/components/Card";
 import { CardSkeleton } from "@/shared/components/Loading";
-import { USAGE_SUPPORTED_PROVIDERS } from "@/shared/constants/providers";
+import {
+  isAnthropicCompatibleProvider,
+  isOpenAICompatibleProvider,
+  USAGE_SUPPORTED_PROVIDERS,
+} from "@/shared/constants/providers";
 import { pickDisplayValue } from "@/shared/utils/maskEmail";
 import useEmailPrivacyStore from "@/store/emailPrivacyStore";
 import { useNotificationStore } from "@/store/notificationStore";
@@ -256,7 +260,18 @@ export default function ProviderLimits({
     providerLabelsWithNodes([])
   );
 
+  const hasCustomProvider = useMemo(
+    () =>
+      connections.some(
+        (conn) =>
+          isOpenAICompatibleProvider(conn.provider) || isAnthropicCompatibleProvider(conn.provider)
+      ),
+    [connections]
+  );
+
   useEffect(() => {
+    if (!hasCustomProvider) return;
+
     let alive = true;
     fetch("/api/provider-nodes")
       .then((r) => (r.ok ? r.json() : null))
@@ -270,7 +285,7 @@ export default function ProviderLimits({
     return () => {
       alive = false;
     };
-  }, []);
+  }, [hasCustomProvider]);
 
   useEffect(() => {
     let alive = true;
@@ -560,11 +575,11 @@ export default function ProviderLimits({
     return [...filteredConnections].sort((a, b) =>
       compareQuotaConnections(a, b, {
         providerOrder: PROVIDER_ORDER,
-        providerLabels: PROVIDER_LABEL,
+        providerLabels,
         compare: compareTr,
       })
     );
-  }, [filteredConnections]);
+  }, [filteredConnections, providerLabels]);
   const visibleQuotaData = useVisibleQuotaData(sortedConnections, quotaData);
 
   const resolvedPlanByConnection = useMemo(
@@ -696,7 +711,7 @@ export default function ProviderLimits({
     return [...filtered].sort((a, b) =>
       compareQuotaConnections(a, b, {
         providerOrder: PROVIDER_ORDER,
-        providerLabels: PROVIDER_LABEL,
+        providerLabels,
         compare: compareTr,
         accountCompare: (x, y) => {
           const sx = statusRank[statusByConnection[x.id] || "empty"];
@@ -718,6 +733,7 @@ export default function ProviderLimits({
     statusByConnection,
     envFilter,
     providerFilter,
+    providerLabels,
     visibleQuotaData,
   ]);
 
@@ -1042,7 +1058,7 @@ export default function ProviderLimits({
                 <option value="all">{tr("filterProviderAll", "All providers")}</option>
                 {providerOptions.map((provider) => (
                   <option key={provider} value={provider}>
-                    {PROVIDER_LABEL[provider] || provider}
+                    {providerLabels[provider] || provider}
                   </option>
                 ))}
               </select>
