@@ -457,6 +457,7 @@ export {
 export { SearchableSelect } from "./searchable-select";
 export type { SearchableSelectProps, SearchableSelectOption, SearchableSelectFilter } from "./searchable-select";
 export { Wizard, defaultWizardLabels, type WizardLabels, type WizardProps } from "./wizard";
+export { FeatureActionCard, type FeatureActionCardProps } from "./feature-action-card";
 export { ChoiceCard, MultiChoiceCard, SetupLayout, SetupBenefits, SetupProgressCard, SaveChangesBar, type MultiChoiceCardProps, type SetupLayoutProps, type SetupBenefitsProps, type ChoiceCardProps, type ChoiceCardTone, type SetupProgressCardProps, type SaveChangesBarProps, defaultSetupProgressCardLabels, type SetupProgressCardLabels, type SetupProgressCardStep } from "./onboarding-patterns";
 export { AnnouncementCarousel, defaultAnnouncementCarouselLabels, type AnnouncementCarouselLabels, type AnnouncementCarouselProps, type AnnouncementItem, type AnnouncementMediaState } from "./announcement-carousel";
 
