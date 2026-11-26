@@ -2606,7 +2606,8 @@ async function handleSingleModelChat(
           requestSignal?.aborted !== true
         ) {
           preferredFailoverUsed = true;
-          preferredTimeoutOriginal = withSelectedConnectionHeader(
+          noteAccountFallback("pre_response_timeout", credentials.connectionId);
+          preferredTimeoutOriginal = withRoutingTelemetry(
             result.response,
             credentials.connectionId
           );
@@ -2617,7 +2618,7 @@ async function handleSingleModelChat(
           );
           continue;
         }
-        return withSelectedConnectionHeader(result.response, credentials.connectionId);
+        return withRoutingTelemetry(result.response, credentials.connectionId);
       }
       // Never let generic account fallback or affinity eviction move a Muse caller.
       if (museOwner) {
