@@ -6,7 +6,9 @@ import type { HttpAttemptSelection } from "../../utils/providerHttpAttempts.ts";
  */
 
 import { isUnpricedMeteredCost, meteredBudgetCost } from "@/lib/usage/meteredBudgetPolicy";
-import { readCpaAuthIndex } from "../chatCore/failureUsage.ts";
+import { isFeatureFlagEnabled } from "@/shared/utils/featureFlags";
+import { readCpaAuthIndex, toFailureUsageAggregate } from "./failureUsage.ts";
+import { recordNonStreamingKeyUsage } from "./nonStreamingUsageStats.ts";
 
 import { createRoutingEvent, emitRoutingEvent } from "../../services/routing/index.ts";
 
@@ -475,7 +477,16 @@ export async function runNonStreamingResponse(deps: NonStreamingDeps) {
           : buildErrorBody(err.status, err.error || "Provider request failed"),
         cacheSource: "upstream",
       });
-      persistFailureUsage(err.status, err.errorCode || `upstream_${err.status}`);
+      // The execution pipeline can return an HTTP error before the leg extracts usage.
+      persistFailureUsage(
+        err.status,
+        err.errorCode || `upstream_${err.status}`,
+        isFeatureFlagEnabled("NONSTREAM_UPSTREAM_FAILURE_BILLED_USAGE_ENABLED")
+          ? toFailureUsageAggregate(
+              legResult.usage ?? extractUsageFromResponse(errUpstreamBody, provider)
+            )
+          : undefined
+      );
       trackPendingRequest(
         model,
         provider,
@@ -711,16 +722,27 @@ export async function runNonStreamingResponse(deps: NonStreamingDeps) {
       looksLikeSSE ? { _streamed: true, _format: "sse-json", summary: responseBody } : responseBody
     );
     effectiveServiceTier = resolveReportedServiceTier(responseBody) ?? effectiveServiceTier;
-    if (onRequestSuccess) {
+    const accountRefusedReplyAsFailure = isFeatureFlagEnabled(
+      "NONSTREAM_REFUSED_REPLY_FAILURE_ACCOUNTING_ENABLED"
+    );
+    if (!accountRefusedReplyAsFailure && onRequestSuccess) {
       await runWithCodexResponseFence(providerResponse, () => onRequestSuccess(), true);
     }
     const successConnectionId = getCurrentConnectionId();
-    await maybeSyncClaudeExtraUsageState({
+    const extraUsageSync = maybeSyncClaudeExtraUsageState({
       provider,
       connectionId: successConnectionId,
       providerSpecificData: credentials?.providerSpecificData,
       log,
     });
+    if (
+      provider === "claude" &&
+      isFeatureFlagEnabled("CLAUDE_NONSTREAM_EXTRA_USAGE_BACKGROUND_SYNC_ENABLED")
+    ) {
+      void extraUsageSync;
+    } else {
+      await extraUsageSync;
+    }
     // Bill the provider leg's own usage: it was extracted from the body BEFORE
     // translateNonStreamingClientResponse mutated it (applyClientUsageBuffer adds
     // the #8331 client context buffer and can replace usage with an estimate).
@@ -771,34 +793,37 @@ export async function runNonStreamingResponse(deps: NonStreamingDeps) {
       skillRequestId,
       log,
     });
-    appendRequestLog({
-      model,
-      provider,
-      connectionId: successConnectionId,
-      tokens: usage,
-      status: "200 OK",
-    }).catch(() => {});
-    recordNonStreamingUsageStats(usage, {
-      traceEnabled,
-      provider,
-      connectionId: successConnectionId,
-      model,
-      startTime,
-      apiKeyInfo,
-      effectiveServiceTier,
-      isCombo,
-      comboStrategy,
-      endpoint: endpointPath,
-      cpaAuthIndex: readCpaAuthIndex(providerResponse),
-      agentContext,
-      sessionTurn: resolveSessionTurn({
-        clientRawRequest,
-        body,
-        responses: [okLeg.response],
-        agentContext,
+    const recordSuccessUsage = () => {
+      appendRequestLog({
+        model,
+        provider,
+        connectionId: successConnectionId,
+        tokens: usage,
+        status: "200 OK",
+      }).catch(() => {});
+      recordNonStreamingUsageStats(usage, {
+        traceEnabled,
+        provider,
+        connectionId: successConnectionId,
+        model,
+        startTime,
         apiKeyInfo,
-      }),
-    });
+        effectiveServiceTier,
+        isCombo,
+        comboStrategy,
+        endpoint: endpointPath,
+        cpaAuthIndex: readCpaAuthIndex(providerResponse),
+        agentContext,
+        sessionTurn: resolveSessionTurn({
+          clientRawRequest,
+          body,
+          responses: [okLeg.response],
+          agentContext,
+          apiKeyInfo,
+        }),
+      });
+    };
+    if (!accountRefusedReplyAsFailure) recordSuccessUsage();
 
     const customSkillExecutionEnabled =
       Boolean(memoryOwnerId) && memorySettings?.skillsEnabled === true;
@@ -856,6 +881,11 @@ export async function runNonStreamingResponse(deps: NonStreamingDeps) {
     // A metered model with no price must not pass the dollar budget as $0.
     const unpricedBudgetCost = isUnpricedMeteredCost(provider, costResult);
     const chatCostCtx = buildCostCtx(provider, model, usage, effectiveServiceTier, traceId);
+    const recordRefusedReplyUsage = (status: number, errorCode: string) => {
+      const servedModel = modelAfterFamilyFallback(model, currentModel, effectiveModel, finalBody);
+      persistFailureUsage(status, errorCode, toFailureUsageAggregate(usage), servedModel);
+      recordNonStreamingKeyUsage(usage, { apiKeyInfo, provider, model: servedModel, startTime });
+    };
 
     if (postCallGuardrails.blocked) {
       const guardrailMessage = postCallGuardrails.message || "Response blocked by guardrail";
@@ -879,6 +909,9 @@ export async function runNonStreamingResponse(deps: NonStreamingDeps) {
         geminiPromptCache: cacheUsageLogMeta?.geminiPromptCache,
         cacheSource: "upstream",
       });
+      if (accountRefusedReplyAsFailure) {
+        recordRefusedReplyUsage(HTTP_STATUS.BAD_REQUEST, "guardrail_blocked");
+      }
       recordChatCallCost(
         apiKeyInfo,
         meteredBudgetCost(provider, estimatedCost),
@@ -980,7 +1013,11 @@ export async function runNonStreamingResponse(deps: NonStreamingDeps) {
         geminiPromptCache: cacheUsageLogMeta?.geminiPromptCache,
         cacheSource: "upstream",
       });
-      persistFailureUsage(HTTP_STATUS.BAD_GATEWAY, "malformed_translated_response");
+      if (accountRefusedReplyAsFailure) {
+        recordRefusedReplyUsage(HTTP_STATUS.BAD_GATEWAY, "malformed_translated_response");
+      } else {
+        persistFailureUsage(HTTP_STATUS.BAD_GATEWAY, "malformed_translated_response");
+      }
       trackPendingRequest(
         model,
         provider,
@@ -1031,6 +1068,13 @@ export async function runNonStreamingResponse(deps: NonStreamingDeps) {
           pipelineRecovered,
         },
       };
+    }
+
+    if (accountRefusedReplyAsFailure) {
+      if (onRequestSuccess) {
+        await runWithCodexResponseFence(providerResponse, () => onRequestSuccess(), true);
+      }
+      recordSuccessUsage();
     }
 
     // Durable Memory only learns from a reply the client receives: a guardrail-blocked (400) or
