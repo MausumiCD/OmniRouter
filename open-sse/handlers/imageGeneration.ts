@@ -1,3 +1,4 @@
+import type { ImageEditControls } from "./imageGeneration/editControls.ts";
 import { randomUUID } from "crypto";
 import { falSelectionEndpoint, isLegacyFalEndpoint } from "../config/falEndpoint.ts";
 /** Image generation handler for POST /v1/images/generations (OpenAI-compatible). */
@@ -1568,6 +1569,7 @@ async function handleOpenAIImageGeneration({
  * `fetch` derives the multipart boundary from the FormData body.
  */
 export async function handleOpenAIImageEdit({
+  controls = {},
   model,
   provider,
   credentials,
@@ -1579,6 +1581,7 @@ export async function handleOpenAIImageEdit({
   n = 1,
   log,
 }: {
+  controls?: ImageEditControls;
   model: string;
   provider: string;
   credentials:
@@ -1598,6 +1601,7 @@ export async function handleOpenAIImageEdit({
   n?: number;
   log?: { info: (tag: string, message: string) => void } | null;
 }) {
+  if ("error" in controls) return controls;
   const startTime = Date.now();
   const url = resolveImageBaseUrl(
     credentials,
@@ -1621,6 +1625,8 @@ export async function handleOpenAIImageEdit({
       )
     );
   };
+  if (controls.quality) appendField("quality", controls.quality);
+  if (controls.background) appendField("background", controls.background);
   appendField("model", model);
   appendField("prompt", prompt);
   if (size) appendField("size", size);
@@ -1687,6 +1693,7 @@ export async function handleOpenAIImageEdit({
  * whose contract is used by custom OpenAI-compatible nodes (#10197).
  */
 export async function handleOpenRouterImageEdit({
+  controls = {},
   model,
   provider,
   baseUrl,
@@ -1698,6 +1705,7 @@ export async function handleOpenRouterImageEdit({
   n = 1,
   log,
 }: {
+  controls?: ImageEditControls;
   model: string;
   provider: string;
   baseUrl: string;
@@ -1715,6 +1723,7 @@ export async function handleOpenRouterImageEdit({
   n?: number;
   log?: { info: (tag: string, message: string) => void } | null;
 }) {
+  if ("error" in controls) return controls;
   const startTime = Date.now();
   let url = baseUrl.trim();
   while (url.endsWith("/")) url = url.slice(0, -1);
@@ -1728,6 +1737,7 @@ export async function handleOpenRouterImageEdit({
   const upstreamBody: Record<string, unknown> = {
     model,
     prompt,
+    ...controls,
     input_references: [
       {
         type: "image_url",
@@ -2815,6 +2825,7 @@ type CodexImageEditResult =
  * response formatting, and error handling cannot drift between generations and edits.
  */
 export async function handleCodexImageEdit({
+  controls = {},
   model,
   provider,
   providerConfig,
@@ -2824,6 +2835,7 @@ export async function handleCodexImageEdit({
   log,
   signal = null,
 }: {
+  controls?: ImageEditControls;
   model: string;
   provider: string;
   providerConfig: unknown;
@@ -2837,11 +2849,12 @@ export async function handleCodexImageEdit({
   } | null;
   signal?: AbortSignal | null;
 }): Promise<CodexImageEditResult> {
+  if ("error" in controls) return controls;
   const result = await handleCodexImageGeneration({
     model,
     provider,
     providerConfig,
-    body: { ...body, n: 1 },
+    body: { ...body, ...controls, n: 1 },
     credentials,
     log,
     referenceImages,
